@@ -1,3 +1,17 @@
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+
 # Triplet Loss
 
 Despite the name of the blog that first introduces a Loss Function, this is not the first thing we think when we are designing the solution to our problem under a NN perspective. Said this, let's first talk about the context that our Loss function features.
