@@ -82,37 +82,53 @@ For the standard Triplet Loss function, the distance measure established is the 
 
 ## Code example
 
-Following the inspiration for this article, the Sentence Bert, I'll presente a little piece of code where we can see an example of siamese network for NLP tasks following the proposed design in the original paper and, obviously, with the use of Triplet Loss.
+Following the inspiration for this article, the Sentence Bert, I'll presente a little piece of code where we can see an example for NLP following the basic Siamese Networks steps that I've commented later in this post.
 
 ```python
-    from transformers import BertTokenizer
-    from transformers import BertModel
-    from torch import nn
+from transformers import BertTokenizer
+from transformers import BertModel
+from torch import nn
 
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-    model = BertModel.from_pretrained('bert-base-uncased')
-    criteria = nn.TripletMarginLoss(margin=1.0, p=2)
+# Defining the BERT model to generate the embeddings
+tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+model = BertModel.from_pretrained('bert-base-uncased')
 
-    def encode_sentence(sentence):
-        tokens = tokenizer(sentence,
-            add_special_tokens=True, return_tensors='pt',
-            max_length=128, padding='max_length', truncation=True)
-        return tokens['input_ids'], tokens['attention_mask']
+# Defining the Triplet Loss with Euclidean Distance function
+criteria = nn.TripletMarginLoss(margin=1.0, p=2)
 
-    anchor = "Trucks are awesome"
-    positive = "Pigs are cool animals"
-    negative = "I like trucks"
+def encode_sentence(sentence):
+    tokens = tokenizer(sentence, add_special_tokens=True, return_tensors='pt', max_length=128, padding='max_length', truncation=True)
+    return tokens['input_ids'], tokens['attention_mask']
 
+def simple_forward(anchor, positive, negative):
+    # Generating the tokens from our sentence
     input_ids1, attention_mask1 = encode_sentence(anchor)
     input_ids2, attention_mask2 = encode_sentence(positive)
     input_ids3, attention_mask3 = encode_sentence(negative)
 
-    anchoer_emb = model(input_ids1, attention_mask1)[1] # Gets the pooled output
+    # Get the pooled output from the model for each instance
+    anchoer_emb = model(input_ids1, attention_mask1)[1]
     positive_emb = model(input_ids2, attention_mask2)[1]
     negative_emb = model(input_ids3, attention_mask3)[1]
 
+    # Compute the loss
     loss = criteria(anchoer_emb, positive_emb, negative_emb)
-    print(loss) # tensor(2.3362, grad_fn=<MeanBackward0>)
+    return loss
+
+first_sample = {
+    "anchor": "I like trucks",
+    "positive": "I love trucks",
+    "negative": "Pigs can't fly"
+}
+
+second_sample = {
+    "anchor": "I like trucks",
+    "positive": "Pigs can't fly",
+    "negative": "I love trucks"
+}
+
+simple_forward(**first_sample) # tensor(0., grad_fn=<MeanBackward0>)
+simple_forward(**second_sample) # tensor(4.5003, grad_fn=<MeanBackward0>)
 ```
 
 ## References
