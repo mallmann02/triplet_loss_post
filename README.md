@@ -36,8 +36,9 @@ $$D(x_i, x_j) = ||L(x_i − x_j )||^2.$$
 
 To approach the learning of these Linear Transformations, the author suggested a cost function that introduces the idea of optimizing through two competing terms:
 
-$$\sum_{ij} \eta_{ij} ||L(x_i - x_j)||^2 + c \sum_{ijl} \eta_{ij} (1 - y_{il}) [1 + ||L(x_i - x_j)||^2 - ||L(x_i - x_l)||^2] +$$
-where:
+$$\sum_{ij} \eta_{ij} ||L(x_i - x_j)||^2 + c \sum_{ijl} \eta_{ij} (1 - y_{il}) [1 + ||L(x_i - x_j)||^2 - ||L(x_i - x_l)||^2]+$$
+
+Where:
 
 - $y_{il}$: indicates whether labels $y_i$ and $y_l$ match
 - $\eta_{ij}$: indicates whether $x_j$ is a target neighbor of $x_i$
